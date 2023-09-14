@@ -30,38 +30,43 @@ def unlock_door(door_number=None):
 def process_qr_code(qr_code_data):
     key1 = ''
     key2 = ''
-    box1 = "56518C02-55CD-446C-AC92-0825F7997485"
-    box2 = "FCFC113E-69F6-423D-A456-AFF04D6F4AFF"
+    key3 = ''
+    role1 = "1"
+    role2 = '2'
+    box1 = "FCFC113E-69F6-423D-A456-AFF04D6F4AFF"
+    box2 = "56518C02-55CD-446C-AC92-0825F7997485"
     data = qr_code_data.split("LEFTSHIFT")
     data = "".join(data).split("MINUS")
     data = "-".join(data).split("DOT")
     data = ".".join(data).split("COMMA")
     data = "".join(data)
-    value_qrcode1 = data[22:58]
+    value_qrcode1 = data[24:60]
     print("value_qrcode1", value_qrcode1)
-    value_qrcode2 = data[58:]
+    value_qrcode2 = data[60:]
     print("value_qrcode2", value_qrcode2)
-    key1 = data[0:9] 
+    key1 = data[2:12]
     print("value_key1", key1)
-    key2  = data[0:9] 
+    key2 = data[2:12]
     print("value_key2", key2)
-    if value_qrcode1 == box1 and value_qrcode2 == '' and key1 == key2:
+    key3 = data[0:1]
+    print("value_key3", key3)
+    if value_qrcode1 == box1 and value_qrcode2 == '' and key1 == key2 and key3 == role1:
         unlock_door(1)
         print("Box 1 Unlocked")
-    elif value_qrcode1 == box2 and value_qrcode2 == '':
+    elif value_qrcode1 == box2 and value_qrcode2 == '' and key1 == key2 and key3 == role1:
         unlock_door(2)
         print("Box 2 Unlocked")
-    elif value_qrcode1 == box1 and value_qrcode2 == box2:
+    elif value_qrcode1 == box1 and value_qrcode2 == box2 and key3 == role2:
         unlock_door("all")
         print("All Boxes Unlocked")
         key2 = ''
-        print("Key2 After Del", key2)
+        key3 = ''
     else:
         print("Unlock failed")
 
 
 def main():
-    device = evdev.InputDevice('/dev/input/event5')
+    device = evdev.InputDevice('/dev/input/event6')
     qr_code_data = ''
 
     for event in device.read_loop():
